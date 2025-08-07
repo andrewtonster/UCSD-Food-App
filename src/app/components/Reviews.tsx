@@ -1,0 +1,71 @@
+"use client";
+import { useState, useOptimistic } from "react";
+import { submitReview } from "../actions";
+import Image from "next/image";
+import Modal from "./Modal";
+
+interface User {
+  id: string;
+  email?: string | null;
+  name?: string | null;
+}
+
+interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
+  user: User;
+}
+const Reviews = ({
+  initialReviews,
+  restaurantId,
+}: {
+  initialReviews: Review[];
+  restaurantId: string;
+}) => {
+  const [reviews, setReviews] = useState<Review[]>(initialReviews ?? []);
+  const count = reviews.length;
+
+  const [optimisticReviews, addOptimisticReview] = useOptimistic(
+    reviews,
+    (prev, next: Review) => [...prev, next]
+  );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <div className="bg-white px-5 py-5 rounded-lg">
+      <div className="max-h-[32rem] overflow-y-auto space-y-6 bg-[#4574ab] p-4 rounded-md">
+        {reviews.map((review, idx) => (
+          <div
+            key={idx}
+            className="flex items-start bg-white rounded-xl shadow-md p-4 w-full max-w-2xl mx-auto transition-all"
+          >
+            {/* Avatar */}
+            <div className="relative w-16 h-16 mr-4 rounded-full overflow-hidden shrink-0 border-2 border-[#8cc2e1]">
+              <Image
+                src="/ramen.webp"
+                alt={`Avatar of ${review.user.name ?? "Anonymous"}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 268px) 100vw"
+                loading="lazy"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="flex flex-col">
+              <h3 className="font-semibold text-[#4574ab] text-lg">
+                {review.user.name ?? "Anonymous"}
+              </h3>
+              <p className="text-[#2b263b] text-sm mt-1">{review.comment}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Reviews;
