@@ -25,7 +25,7 @@ const SearchBar = ({
           setQuery(e.target.value);
           setSearch(e.target.value);
         }}
-        className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition"
+        className="w-full max-w-lg px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition bg-white"
       />
 
       <Link href={`/profile/${user.uid}`}>Go To Profile</Link>

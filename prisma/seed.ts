@@ -31,106 +31,97 @@ async function main() {
   ]);
 
   // Create Restaurants
-  const [eastGrill, eastNoodles, westBistro, westCafe] = await Promise.all([
-    prisma.restaurant.create({
-      data: {
-        name: "East Grill",
-        ratingScore: 4.5,
-        numRatings: 3,
-        coordinates: "40.7128,-74.0060",
-        campusSection: "East Side",
-        imageUrl: null,
-        open: "10:00 AM - 10:00 PM",
-      },
-    }),
-    prisma.restaurant.create({
-      data: {
-        name: "Noodle Nest",
-        ratingScore: 4.0,
-        numRatings: 2,
-        coordinates: "40.7130,-74.0050",
-        campusSection: "East Side",
-        imageUrl: null,
-        open: "11:00 AM - 9:00 PM",
-      },
-    }),
-    prisma.restaurant.create({
-      data: {
-        name: "West Bistro",
-        ratingScore: 4.2,
-        numRatings: 2,
-        coordinates: "40.7120,-74.0080",
-        campusSection: "West Side",
-        imageUrl: null,
-        open: "9:00 AM - 8:00 PM",
-      },
-    }),
-    prisma.restaurant.create({
-      data: {
-        name: "Campus Cafe",
-        ratingScore: 3.8,
-        numRatings: 1,
-        coordinates: "40.7110,-74.0070",
-        campusSection: "West Side",
-        imageUrl: null,
-        open: "8:00 AM - 6:00 PM",
-      },
-    }),
-  ]);
+  // Generate 20 restaurants
+  const restaurantData = [
+    { name: "Ocean Bowl", section: "North Campus" },
+    { name: "Bento Box", section: "Downtown" },
+    { name: "Taco Alley", section: "West Side" },
+    { name: "Campus Deli", section: "East Side" },
+    { name: "Sunset Grill", section: "South Campus" },
+    { name: "Green Leaf", section: "West Side" },
+    { name: "Pasta Point", section: "East Side" },
+    { name: "Ramen Rise", section: "Downtown" },
+    { name: "Sizzle Spot", section: "North Campus" },
+    { name: "Golden Chopsticks", section: "South Campus" },
+    { name: "Noodle Town", section: "East Side" },
+    { name: "Campus Curry", section: "West Side" },
+    { name: "Teriyaki Twist", section: "South Campus" },
+    { name: "Pho Paradise", section: "Downtown" },
+    { name: "Wrap & Roll", section: "East Side" },
+    { name: "East Eats", section: "East Side" },
+    { name: "West Wings", section: "West Side" },
+    { name: "North Noms", section: "North Campus" },
+    { name: "South Sizzle", section: "South Campus" },
+    { name: "Downtown Diner", section: "Downtown" },
+  ];
+
+  const restaurants = await Promise.all(
+    restaurantData.map((data, i) =>
+      prisma.restaurant.create({
+        data: {
+          name: data.name,
+          ratingScore: [3.5, 4.0, 4.2, 4.5, 4.8][i % 5],
+          numRatings: Math.floor(Math.random() * 5) + 1,
+          coordinates: `40.71${10 + i},-74.00${10 + i}`,
+          campusSection: data.section,
+          imageUrl: null,
+          open: [
+            "10:00 AM - 10:00 PM",
+            "11:00 AM - 9:00 PM",
+            "9:00 AM - 8:00 PM",
+            "8:00 AM - 6:00 PM",
+          ][i % 4],
+        },
+      })
+    )
+  );
 
   // Create Reviews (8 total)
-  await prisma.review.createMany({
-    data: [
-      {
-        rating: 5,
-        comment: "Amazing food and service!",
-        restaurantId: eastGrill.id,
-        userId: alice.id,
+  type UserKey = "alice" | "bob" | "charlie";
+  const userMap: Record<UserKey, typeof alice> = {
+    alice,
+    bob,
+    charlie,
+  };
+  const sampleComments = [
+    "Loved the ambiance!",
+    "Delicious and affordable.",
+    "Could be better.",
+    "Amazing service and food!",
+    "Definitely coming back.",
+    "Not worth the hype.",
+    "Great spot between classes.",
+    "Perfect place for late night eats.",
+    "Highly recommend the special.",
+    "Friendly staff and fast service.",
+    "The spice level was just right.",
+    "Huge portions!",
+    "They messed up my order.",
+    "Food was fresh and hot.",
+    "Excellent value.",
+    "Too crowded during lunch.",
+    "Clean and cozy.",
+    "Good vegan options!",
+    "Wish they had more seating.",
+    "Loved the desserts!",
+  ];
+
+  const userKeys: UserKey[] = ["alice", "bob", "charlie"];
+
+  for (let i = 0; i < 40; i++) {
+    const userKey = userKeys[i % userKeys.length];
+    const user = userMap[userKey];
+    const restaurant = restaurants[i % restaurants.length];
+
+    await prisma.review.create({
+      data: {
+        rating: Math.floor(Math.random() * 3) + 3, // 3 to 5
+        comment: sampleComments[i % sampleComments.length],
+        restaurantId: restaurant.id,
+        userId: user.id,
       },
-      {
-        rating: 4,
-        comment: "Solid experience overall.",
-        restaurantId: eastGrill.id,
-        userId: bob.id,
-      },
-      {
-        rating: 3,
-        comment: "It was okay, could be better.",
-        restaurantId: eastGrill.id,
-        userId: charlie.id,
-      },
-      {
-        rating: 5,
-        comment: "Loved the noodles!",
-        restaurantId: eastNoodles.id,
-        userId: alice.id,
-      },
-      {
-        rating: 4,
-        comment: "Nice and cozy.",
-        restaurantId: westBistro.id,
-        userId: bob.id,
-      },
-      {
-        rating: 5,
-        comment: "Best spot on campus.",
-        restaurantId: westBistro.id,
-        userId: charlie.id,
-      },
-      {
-        rating: 3,
-        comment: "Coffee was weak.",
-        restaurantId: westCafe.id,
-        userId: bob.id,
-      },
-      {
-        rating: 4,
-        comment: "Great for studying!",
-        restaurantId: westCafe.id,
-        userId: alice.id,
-      },
-    ],
-  });
+    });
+  }
 
   console.log("🌱 Database seeded.");
 }

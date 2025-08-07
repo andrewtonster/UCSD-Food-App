@@ -14,9 +14,9 @@ const ImageCarousel = ({ images }: { images: string[] }) => {
     setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
 
   return (
-    <div className="relative w-full h-[60vh] rounded-xl overflow-hidden shadow-md  border-8 border-[#d7d3cf] z-0">
+    <div className="relative w-full h-[60vh] rounded-xl  shadow-md  border-8 border-[#d7d3cf] z-0">
       {/* Current Image */}
-      <Anchor className="absolute top-0 right-0 w-20 h-20 text-black z-10 pointer-events-none" />
+      <Anchor className=" hidden lg:block absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 w-20 h-20 text-black z-10 pointer-events-none -rotate-45" />
       <Image
         src={images[current]}
         alt={`Image ${current + 1}`}

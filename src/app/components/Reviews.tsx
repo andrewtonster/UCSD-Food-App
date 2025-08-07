@@ -3,7 +3,7 @@ import { useState, useOptimistic } from "react";
 import { submitReview } from "../actions";
 import Image from "next/image";
 import Modal from "./Modal";
-
+import { ShipWheel } from "lucide-react";
 interface User {
   id: string;
   email?: string | null;
@@ -35,8 +35,22 @@ const Reviews = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="bg-white px-5 py-5 rounded-lg">
+    <div className=" relative bg-white px-5 py-5 rounded-lg">
+      <ShipWheel className="hidden lg:block absolute top-0 right-0 transform translate-x-1/3 -translate-y-1/3 w-20 h-20 text-black z-10" />
       <div className="max-h-[32rem] overflow-y-auto space-y-6 bg-[#4574ab] p-4 rounded-md">
+        <button
+          className="block mx-auto bg-[#e26d52] px-4 py-2 rounded-lg text-white font-semibold hover:bg-[#af4643] transition cursor-pointer "
+          onClick={() => setIsModalOpen(true)}
+        >
+          {" "}
+          Add a review
+        </button>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <h2 className="text-xl font-semibold mb-2">
+            Hello Please Write your Review
+          </h2>
+          <p>This is custom modal content.</p>
+        </Modal>
         {reviews.map((review, idx) => (
           <div
             key={idx}

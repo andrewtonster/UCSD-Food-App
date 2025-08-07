@@ -35,7 +35,7 @@ const RestaurantList = ({
   return (
     <>
       {isSearching ? (
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 w-[90%] mr-auto ml-auto">
+        <div className="flex flex-wrap justify-center gap-5">
           {filteredRestaurants.map((restaurant, idx) => {
             return (
               <RestaurantCard
@@ -47,7 +47,7 @@ const RestaurantList = ({
           })}
         </div>
       ) : (
-        <div className="w-[90%] mx-auto space-y-8">
+        <div className="w-full max-w-7xl mx-auto px-4 space-y-8">
           {[
             "East Side",
             "West Side",
@@ -58,7 +58,7 @@ const RestaurantList = ({
             (section) =>
               grouped[section]?.length > 0 && (
                 <section key={section}>
-                  <h2 className="text-xl font-bold mb-2">{section}</h2>
+                  <h2 className="text-3xl font-bold mb-2">{section}</h2>
                   <div className="flex gap-4 overflow-x-auto pb-2">
                     {grouped[section].map((restaurant, idx) => (
                       <RestaurantCard

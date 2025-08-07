@@ -9,7 +9,14 @@ import LoginForm from "@/app/components/Login";
 import SignOutButton from "@/app/components/SignOut";
 import Image from "next/image";
 import ImageCarousel from "@/app/components/ImageCarousel";
-import { ChevronLeft, ChevronRight, ShipWheel, Anchor } from "lucide-react";
+import {
+  Star,
+  MapPin,
+  Clock3,
+  SquareArrowLeft,
+  Clock2,
+  Clock1,
+} from "lucide-react";
 import { Bevan } from "next/font/google";
 const bevan = Bevan({
   subsets: ["latin"],
@@ -44,29 +51,39 @@ const page = async ({ params }: { params: { id: string } }) => {
   return (
     <div className="min-h-screen bg-[#8cc2e1] text-[#2b263b] relative">
       {/* Back Button */}
-      <Link
+      {/* <Link
         href="/"
         className="absolute top-4 left-4 text-[#4574ab] hover:text-[#ed7976] text-3xl transition-all"
       >
-        ←
-      </Link>
+        <SquareArrowLeft className="w-10 h-10 text-black hover:text-[#af4643] " />
+      </Link> */}
 
       <main className="max-w-6xl mx-auto px-6 sm:px-10 py-12 space-y-16">
         {/* Header Info */}
         <section className="space-y-4 relative">
-          <h1 className="text-4xl font-extrabold text-[#4574ab] border-b-4 border-[#8cc2e1] inline-block pb-2 relative">
+          <h1 className="text-4xl font-extrabold text-[#354462] border-b-4 border-[#8cc2e1] inline-block pb-2 relative">
             {restaurant.name}
             <span className="absolute left-0 -bottom-1 w-10 h-1 bg-[#f79f79] rounded-full"></span>
           </h1>
 
           <div className="flex flex-wrap gap-6 text-[#354462] text-lg font-medium">
-            <div>⭐ {restaurant.ratingScore}</div>
+            <div className="flex items-center justify-center gap-1">
+              <Star fill="#ffad72" className="inline" />{" "}
+              {restaurant.ratingScore}
+            </div>
             <div>
-              📝 {restaurant.numRatings}{" "}
+              {restaurant.numRatings}{" "}
               {restaurant.numRatings === 1 ? "review" : "reviews"}
             </div>
-            <div>📍 {restaurant.campusSection}</div>
-            <div>🕒 Open: {restaurant.open}</div>
+            <div className="flex items-center justify-center gap-1">
+              {" "}
+              <MapPin fill="#ecdddc" className="inline" />{" "}
+              {restaurant.campusSection}
+            </div>
+            <div className="flex items-center justify-center gap-1">
+              {" "}
+              <Clock3 className="inline" /> Open: {restaurant.open}
+            </div>
           </div>
         </section>
 
@@ -84,11 +101,10 @@ const page = async ({ params }: { params: { id: string } }) => {
 
             {/* Foreground card (white content) */}
             <div className="relative z-10 bg-white p-6 rounded-xl  text-[#2b263b] space-y-4 text-lg leading-relaxed shadow-md">
-              <h2 className="text-2xl font-semibold text-[#4574ab] relative before:content-[''] before:absolute before:-left-6 before:top-2 before:w-1 before:h-6 before:bg-[#ed7976] before:rounded-full">
+              <h2 className="text-2xl font-semibold text-[#4574ab] relative before:content-[''] before:absolute before:-left-3 before:top-1 before:w-1 before:h-6 before:bg-[#ed7976] before:rounded-full">
                 About
               </h2>
 
-              <ShipWheel />
               <p>
                 Welcome to {restaurant.name}, a favorite spot in the{" "}
                 {restaurant.campusSection} area of UCSD. Known for its authentic
@@ -106,10 +122,11 @@ const page = async ({ params }: { params: { id: string } }) => {
 
         {/* Reviews */}
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-[#4574ab] relative before:content-[''] before:absolute before:-left-4 before:top-1 before:w-1 before:h-5 before:bg-[#e26d52] before:rounded-sm">
-            Reviews
-          </h2>
-
+          <div className="">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-[black] relative before:content-[''] before:absolute">
+              Reviews
+            </h2>
+          </div>
           <Reviews
             initialReviews={restaurant.reviews}
             restaurantId={restaurant.id}

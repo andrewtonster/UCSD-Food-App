@@ -27,7 +27,7 @@ export const SearchClient = ({ allRestaurants }: RestaurantListProps) => {
   );
 
   return (
-    <div>
+    <div className="">
       <SearchBar setSearch={setSearch} />
       <RestaurantList
         filteredRestaurants={filteredRestaurants}
