@@ -41,7 +41,7 @@ export default async function ProfilePage({ params }: PageProps) {
 
       {/* Reviews */}
 
-      <div className="space-y-4 w-full max-w-2xl mx-auto max-h-[60vh] overflow-y-auto">
+      <div className="space-y-4 w-full max-w-2xl mx-auto h-[40vh] overflow-y-auto rounded-xl bg-white/50 backdrop-blur-sm p-4">
         {user.userReviews.map((review) => (
           <div
             key={review.id}
