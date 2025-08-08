@@ -9,8 +9,11 @@ const SettingsGear = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div onClick={() => setIsOpen(!isOpen)}>
-      <div className="relative group inline-block">
+    <div>
+      <div
+        className="relative group inline-block"
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <Image
           src="/ramen.webp"
           width={200}
@@ -22,9 +25,7 @@ const SettingsGear = () => {
         <Pencil className="absolute inset-0 m-auto w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition duration-300" />
       </div>
 
-      <UserSettings isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        test
-      </UserSettings>
+      <UserSettings isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 };

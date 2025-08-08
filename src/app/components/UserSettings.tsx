@@ -9,14 +9,9 @@ import axios from "axios";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  children: React.ReactNode;
 }
 
-export default function UserSettings({
-  isOpen,
-  onClose,
-  children,
-}: ModalProps) {
+export default function UserSettings({ isOpen, onClose }: ModalProps) {
   const { user } = useAuth();
   const [name, setName] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -91,8 +86,6 @@ export default function UserSettings({
         >
           &times;
         </button>
-
-        {children}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-8">
           <label className="text-sm font-medium text-gray-700">
