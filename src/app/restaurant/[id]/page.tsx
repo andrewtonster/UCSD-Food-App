@@ -49,7 +49,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   const images = ["/ramen.webp", "/ramen.webp", "/ramen.webp"];
 
   return (
-    <div className="min-h-screen bg-[#8cc2e1] text-[#2b263b] relative">
+    <div className="min-h-screen text-[#2b263b] relative">
       {/* Back Button */}
       {/* <Link
         href="/"

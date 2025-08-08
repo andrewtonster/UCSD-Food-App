@@ -13,9 +13,107 @@
   }
 } */
 
+html {
+  height: 100%;
+  background-color: #b2d5ea;
+}
 body {
-  background: #8cc2e1;
+  position: relative;
   color: #2b263b;
   font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
+  background: url("/waveVertical.svg") no-repeat center center fixed;
+  background-size: cover;
 }
+
+/* .bgImg {
+  box-sizing: border-box;
+  background: url("/waveVertical.svg") no-repeat center center fixed;
+  background-size: cover;
+  z-index: -2;
+} */
+
+.blob-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* prevents blocking clicks */
+  z-index: 1;
+  overflow: hidden;
+}
+
+.wave1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.blob1 {
+  position: fixed;
+  width: 40%;
+  height: 40%;
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
+
+.blob2 {
+  position: fixed;
+  width: 20%;
+  height: 20%;
+  z-index: -1;
+  top: 0;
+  right: 0;
+}
+
+.blob3 {
+  position: fixed;
+  width: 60%;
+  height: 60%;
+  z-index: -1;
+  bottom: 0;
+  right: 0;
+  transform: translate(40%, 40%);
+}
+
+.blob4 {
+  position: fixed;
+  width: 20%;
+  height: 30%;
+  z-index: -1;
+  bottom: 5%;
+  left: 0;
+}
+
+.blob5 {
+  position: fixed;
+  width: 10%;
+  height: 10%;
+  z-index: -1;
+  top: 55%;
+  right: 10%;
+}
+
+.blob6 {
+  position: fixed;
+  width: 25%;
+  height: 25%;
+  z-index: -1;
+  bottom: 35%;
+}
+
+.blob7 {
+  position: fixed;
+  width: 40%;
+  height: 40%;
+  z-index: -1;
+  bottom: 30%;
+  left: 30%;
+}
+
+/* .user-blob {
+  position: absolute;
+  width: 100px;
+} */

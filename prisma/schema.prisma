@@ -44,4 +44,5 @@ model User {
   name        String   @unique
   isAnonymous Boolean  @default(false)
   userReviews Review[]
+  profileImg  String?
 }

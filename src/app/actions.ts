@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { writeFile } from "fs/promises";
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
 
 const ReviewSchema = z.object({
   comment: z.string().min(1, "Comment is required"),
@@ -108,4 +111,47 @@ export async function createUser(userId: string, email: string, name: string) {
   });
 
   return { message: "user created!" };
+}
+
+const settingsSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  profileImg: z.string().optional(), // Firebase Storage URL
+  userId: z.string().min(1, "User ID is required"),
+});
+
+export async function changeSettings(prevState: any, formData: FormData) {
+  const form = {
+    name: formData.get("name"),
+    profileImg: formData.get("profileImg"),
+    userId: formData.get("userId"),
+  };
+
+  const parsed = settingsSchema.safeParse(form);
+
+  if (!parsed.success) {
+    return {
+      message: "Validation failed",
+      errors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  const { name, profileImg, userId } = parsed.data;
+
+  const existingUser = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!existingUser) {
+    return { message: "User not found" };
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      name,
+      profileImg, // just a string URL
+    },
+  });
+
+  return { message: "Settings updated" };
 }

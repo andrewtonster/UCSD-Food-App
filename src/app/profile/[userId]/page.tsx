@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma"; // or wherever your client is
-import Image from "next/image";
+
 import { cookies } from "next/headers";
 import { getAuth } from "firebase-admin/auth";
 import { adminInit } from "@/lib/firebase";
 import { redirect } from "next/navigation";
+import SettingsGear from "@/app/components/SettingsGear";
+
 interface PageProps {
   params: {
     userId: string;
@@ -29,23 +31,17 @@ export default async function ProfilePage({ params }: PageProps) {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="min-h-screen w-full flex flex-col items-center pt-[10vh]">
       {/* Profile Image (future) */}
-      <div className="flex items-center gap-4 mb-6">
-        {/* Replace with user.profileImg if added */}
-        <Image
-          src="/ramen.webp"
-          width={60}
-          height={60}
-          alt="Profile"
-          className="rounded-full"
-        />
+
+      <div className="flex flex-col items-center gap-4 mb-6 justify-center">
+        <SettingsGear />
         <h1 className="text-2xl font-bold">{user.name ?? "Unnamed User"}</h1>
       </div>
 
       {/* Reviews */}
-      <h1>Past Reviews</h1>
-      <div className="space-y-4">
+
+      <div className="space-y-4 w-full max-w-2xl mx-auto max-h-[60vh] overflow-y-auto">
         {user.userReviews.map((review) => (
           <div
             key={review.id}
