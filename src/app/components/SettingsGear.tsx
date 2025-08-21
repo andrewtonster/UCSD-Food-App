@@ -9,7 +9,7 @@ const SettingsGear = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
+    <div className="cursor-pointer ">
       <div
         className="relative group inline-block"
         onClick={() => setIsOpen(!isOpen)}
@@ -19,7 +19,7 @@ const SettingsGear = () => {
           width={200}
           height={200}
           alt="Profile"
-          className="rounded-full ring-4 ring-white cursor-pointer transition duration-300 group-hover:brightness-75"
+          className="rounded-full ring-4 ring-white transition duration-300 group-hover:brightness-75"
         />
 
         <Pencil className="absolute inset-0 m-auto w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition duration-300" />

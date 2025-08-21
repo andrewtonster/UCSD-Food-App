@@ -24,6 +24,8 @@ body {
   box-sizing: border-box;
   background: url("/waveVertical.svg") no-repeat center center fixed;
   background-size: cover;
+  width: 100vw;
+  min-height: 100vh;
 }
 
 /* .bgImg {

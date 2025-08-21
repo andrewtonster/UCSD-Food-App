@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import { nerkoOne } from "../font";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -16,6 +17,26 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const finishLogin = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const idToken = await user.getIdToken(true);
+
+    const res = await fetch("/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ idToken }),
+    });
+
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({ error: "Auth error" }));
+      throw new Error(error || "Failed to create session");
+    }
+
+    router.push("/");
+  };
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -23,7 +44,7 @@ export default function LoginForm() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/");
+      await finishLogin();
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -38,7 +59,7 @@ export default function LoginForm() {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      router.push("/");
+      await finishLogin();
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -62,7 +83,9 @@ export default function LoginForm() {
     space-y-4
   "
       >
-        <h2 className="text-xl font-semibold">Login</h2>
+        <h2 className={`${nerkoOne.className} text-4xl font-semibold`}>
+          Login
+        </h2>
 
         <div className="flex flex-col">
           <label htmlFor="email">Email</label>
@@ -93,7 +116,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full cursor-pointer"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
@@ -111,7 +134,7 @@ export default function LoginForm() {
           type="button"
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full"
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full cursor-pointer"
         >
           {loading ? "Signing in..." : "Sign in with Google"}
         </button>

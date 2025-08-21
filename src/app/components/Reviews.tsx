@@ -49,7 +49,6 @@ const Reviews = ({
           <h2 className="text-xl font-semibold mb-2">
             Hello Please Write your Review
           </h2>
-          <p>This is custom modal content.</p>
         </Modal>
         {reviews.map((review, idx) => (
           <div

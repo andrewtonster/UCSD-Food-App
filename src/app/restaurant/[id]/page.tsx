@@ -18,6 +18,9 @@ import {
   Clock1,
 } from "lucide-react";
 import { Bevan } from "next/font/google";
+
+import { nerkoOne } from "@/app/font";
+
 const bevan = Bevan({
   subsets: ["latin"],
   weight: "400", // Bevan only has 400
@@ -38,6 +41,15 @@ const page = async ({ params }: { params: { id: string } }) => {
     },
   });
 
+  const stats = await prisma.review.aggregate({
+    where: { restaurantId: id },
+    _avg: { rating: true },
+    _count: { rating: true },
+  });
+
+  const averageRating = stats._avg.rating?.toFixed(1) ?? 0; // e.g. 4.2
+  const numRatings = stats._count.rating;
+
   console.log(restaurant);
 
   if (!restaurant) {
@@ -50,30 +62,22 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="min-h-screen text-[#2b263b] relative">
-      {/* Back Button */}
-      {/* <Link
-        href="/"
-        className="absolute top-4 left-4 text-[#4574ab] hover:text-[#ed7976] text-3xl transition-all"
-      >
-        <SquareArrowLeft className="w-10 h-10 text-black hover:text-[#af4643] " />
-      </Link> */}
-
       <main className="max-w-6xl mx-auto px-6 sm:px-10 py-12 space-y-16">
         {/* Header Info */}
         <section className="space-y-4 relative">
-          <h1 className="text-4xl font-extrabold text-[#354462] border-b-4 border-[#8cc2e1] inline-block pb-2 relative">
+          <h1
+            className={`${nerkoOne.className} text-8xl font-extrabold text-[#354462] border-b-4 border-[#8cc2e1] inline-block pb-2 relative`}
+          >
             {restaurant.name}
             <span className="absolute left-0 -bottom-1 w-10 h-1 bg-[#f79f79] rounded-full"></span>
           </h1>
 
           <div className="flex flex-wrap gap-6 text-[#354462] text-lg font-medium">
             <div className="flex items-center justify-center gap-1">
-              <Star fill="#ffad72" className="inline" />{" "}
-              {restaurant.ratingScore}
+              <Star fill="#ffad72" className="inline" /> {averageRating}
             </div>
             <div>
-              {restaurant.numRatings}{" "}
-              {restaurant.numRatings === 1 ? "review" : "reviews"}
+              {numRatings} {numRatings === 1 ? "review" : "reviews"}
             </div>
             <div className="flex items-center justify-center gap-1">
               {" "}
@@ -101,7 +105,9 @@ const page = async ({ params }: { params: { id: string } }) => {
 
             {/* Foreground card (white content) */}
             <div className="relative z-10 bg-white p-6 rounded-xl  text-[#2b263b] space-y-4 text-lg leading-relaxed shadow-md">
-              <h2 className="text-2xl font-semibold text-[#4574ab] relative before:content-[''] before:absolute before:-left-3 before:top-1 before:w-1 before:h-6 before:bg-[#ed7976] before:rounded-full">
+              <h2
+                className={`${nerkoOne.className} text-4xl font-semibold text-[#4574ab] relative before:content-[''] before:absolute before:-left-3 before:top-1 before:w-1 before:h-6 before:bg-[#ed7976] before:rounded-full`}
+              >
                 About
               </h2>
 
@@ -123,7 +129,9 @@ const page = async ({ params }: { params: { id: string } }) => {
         {/* Reviews */}
         <section>
           <div className="">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-[black] relative before:content-[''] before:absolute">
+            <h2
+              className={`${nerkoOne.className} text-6xl font-semibold mb-4 text-center text-[black] relative before:content-[''] before:absolute`}
+            >
               Reviews
             </h2>
           </div>

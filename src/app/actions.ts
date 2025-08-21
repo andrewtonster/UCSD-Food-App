@@ -50,9 +50,14 @@ export async function submitReview(prevState: any, formData: FormData) {
     },
   });
 
+  console.log(`/restaurant/${restaurantId}`);
   revalidatePath(`/restaurant/${restaurantId}`);
-  redirect(`/restaurant/${restaurantId}`);
-  return { message: "Review submitted!" };
+
+  revalidatePath(`/`);
+  // revalidatePath(`/restaurant/[id]`, "page");
+
+  // redirect(`/restaurant/${restaurantId}`);
+  return { message: "Review submitted!", ok: true };
 }
 
 function generateShortName(userId: string) {

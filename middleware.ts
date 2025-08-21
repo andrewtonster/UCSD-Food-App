@@ -1,17 +1,19 @@
-// middleware.ts (lightweight, no firebase-admin)
+// middleware.ts
 import { NextRequest, NextResponse } from "next/server";
+import { adminAuth } from "@/lib/firebaseAdmin";
 
-export function middleware(request: NextRequest) {
-  const session = request.cookies.get("session")?.value;
+export const config = { matcher: ["/profile/:path*"] };
 
-  if (!session) {
-    const url = new URL("/login", request.url);
-    return NextResponse.redirect(url);
+export async function middleware(req: NextRequest) {
+  const cookie = req.cookies.get("__session")?.value;
+  if (!cookie) return NextResponse.redirect(new URL("/login", req.url));
+
+  try {
+    const decoded = await adminAuth.verifySessionCookie(cookie, true);
+    const headers = new Headers(req.headers);
+    headers.set("x-uid", decoded.uid);
+    return NextResponse.next({ request: { headers } });
+  } catch {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
-
-  return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/profile/:path*"],
-};

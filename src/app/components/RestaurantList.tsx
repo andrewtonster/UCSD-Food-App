@@ -1,6 +1,6 @@
 import React from "react";
 import RestaurantCard from "./RestaurantCard";
-
+import { Nerko_One } from "next/font/google";
 interface Restaurant {
   name: string;
   id: string;
@@ -11,6 +11,11 @@ interface Restaurant {
   imageUrl: string | null;
   open: string;
 }
+
+const nerkoOne = Nerko_One({
+  subsets: ["latin"],
+  weight: ["400"], // Choose the weight you want
+});
 
 interface RestaurantListProps {
   filteredRestaurants: Restaurant[];
@@ -42,6 +47,7 @@ const RestaurantList = ({
                 key={idx}
                 indexKey={idx}
                 restaurant={restaurant}
+                large={false}
               />
             );
           })}
@@ -54,23 +60,29 @@ const RestaurantList = ({
             "Downtown",
             "North Campus",
             "South Campus",
-          ].map(
-            (section) =>
-              grouped[section]?.length > 0 && (
-                <section key={section}>
-                  <h2 className="text-3xl font-bold mb-2">{section}</h2>
-                  <div className="flex gap-4 overflow-x-auto pb-2">
-                    {grouped[section].map((restaurant, idx) => (
-                      <RestaurantCard
-                        key={idx}
-                        indexKey={idx}
-                        restaurant={restaurant}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )
-          )}
+          ].map((section, group) => {
+            if (!grouped[section]?.length) return null;
+
+            return (
+              <section key={section}>
+                <h2
+                  className={`${nerkoOne.className} text-5xl font-boldß mb-2`}
+                >
+                  {section}ß
+                </h2>
+                <div className="flex gap-4 overflow-x-auto pb-2">
+                  {grouped[section].map((restaurant, idx) => (
+                    <RestaurantCard
+                      key={idx}
+                      indexKey={idx}
+                      restaurant={restaurant}
+                      large={group == 2}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       )}
     </>

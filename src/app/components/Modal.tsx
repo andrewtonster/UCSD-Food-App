@@ -4,10 +4,11 @@ import React, { useActionState } from "react";
 import { submitReview } from "../actions";
 import useAuth from "@/app/context/AuthContext";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 import { signInAnonymously } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { createAnonymousUser } from "../actions";
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -15,11 +16,13 @@ interface ModalProps {
 }
 
 export default function Modal({ isOpen, onClose, children }: ModalProps) {
+  const router = useRouter();
   const { user, loading } = useAuth();
   console.log("this is my user", user);
   const { id } = useParams<{ id: string }>();
   const [state, formAction, isPending] = useActionState(submitReview, {
     message: "review",
+    ok: false,
   });
 
   const handleGuestLogin = async () => {
@@ -36,7 +39,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       {user ? (
-        <div className="bg-white p-6 rounded-lg max-w-md w-full shadow-lg relative">
+        <div className="bg-[#f2f2f2] p-6 rounded-lg max-w-md w-full shadow-lg relative">
           <button
             onClick={onClose}
             className="absolute top-2 left-2 text-gray-500 hover:text-gray-700 text-2xl cursor-pointer"

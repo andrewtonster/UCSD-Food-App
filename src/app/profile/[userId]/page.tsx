@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/prisma"; // or wherever your client is
 
-import { cookies } from "next/headers";
 import { getAuth } from "firebase-admin/auth";
 import { adminInit } from "@/lib/firebase";
-import { redirect } from "next/navigation";
 import SettingsGear from "@/app/components/SettingsGear";
+import { redirect } from "next/navigation";
+import { adminAuth } from "@/lib/firebaseAdmin";
+import { cookies, headers } from "next/headers";
 
 interface PageProps {
   params: {
@@ -13,10 +14,23 @@ interface PageProps {
 }
 
 export default async function ProfilePage({ params }: PageProps) {
-  const { userId } = await params;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("__session")?.value;
+  if (!token) redirect("/login");
+
+  let uid: string;
+  try {
+    const decoded = await adminAuth.verifySessionCookie(token, true);
+    uid = decoded.uid;
+  } catch {
+    redirect("/login");
+  }
+
+  // Enforce “only me”
+  if (uid !== params.userId) redirect("/403");
 
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: uid },
     include: {
       userReviews: {
         include: {

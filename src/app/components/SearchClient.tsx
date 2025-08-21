@@ -3,6 +3,12 @@ import { useState } from "react";
 import React from "react";
 import SearchBar from "./SearchBar";
 import RestaurantList from "./RestaurantList";
+import { Knewave } from "next/font/google";
+
+const knewave = Knewave({
+  subsets: ["latin"],
+  weight: ["400"], // Choose the weight you want
+});
 
 interface Restaurant {
   name: string;
@@ -28,6 +34,11 @@ export const SearchClient = ({ allRestaurants }: RestaurantListProps) => {
 
   return (
     <div className="">
+      <h1
+        className={`${knewave.className} text-center text-6xl pt-10 text-[#426da7]`}
+      >
+        Wave Eating
+      </h1>
       <SearchBar setSearch={setSearch} />
       <RestaurantList
         filteredRestaurants={filteredRestaurants}

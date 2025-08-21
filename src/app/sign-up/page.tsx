@@ -9,6 +9,7 @@ import {
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { createUser } from "../actions";
+import { nerkoOne } from "../font";
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
@@ -17,6 +18,22 @@ export default function SignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const establishSession = async () => {
+    const user = auth.currentUser;
+    if (!user) throw new Error("No user after signup");
+    const idToken = await user.getIdToken();
+    const res = await fetch("/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ idToken }),
+    });
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({ error: "Auth error" }));
+      throw new Error(error || "Failed to create session");
+    }
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,10 +46,11 @@ export default function SignupForm() {
         email,
         password
       );
-      const uid = userCredential.user.uid;
 
+      await establishSession();
+      const uid = userCredential.user.uid;
       createUser(uid, email, name);
-      router.push("/dashboard"); // or any protected route
+      router.push("/"); // or any protected route
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -46,6 +64,7 @@ export default function SignupForm() {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
+      await establishSession();
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message);
@@ -68,7 +87,9 @@ export default function SignupForm() {
     rounded-2xl
     space-y-4"
       >
-        <h2 className="text-xl font-semibold">Create an Account</h2>
+        <h2 className={`${nerkoOne.className} text-4xl font-semibold`}>
+          Create an Account
+        </h2>
 
         <div className="flex flex-col">
           <label htmlFor="email">Email</label>
