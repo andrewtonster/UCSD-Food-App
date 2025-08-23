@@ -68,7 +68,7 @@ const RestaurantList = ({
                 <h2
                   className={`${nerkoOne.className} text-5xl font-boldß mb-2`}
                 >
-                  {section}ß
+                  {section}
                 </h2>
                 <div className="flex gap-4 overflow-x-auto pb-2">
                   {grouped[section].map((restaurant, idx) => (

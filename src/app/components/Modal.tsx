@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect } from "react";
 import { submitReview } from "../actions";
 import useAuth from "@/app/context/AuthContext";
 import Link from "next/link";
@@ -37,7 +37,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm mb-0">
       {user ? (
         <div className="bg-[#f2f2f2] p-6 rounded-lg max-w-md w-full shadow-lg relative">
           <button
@@ -90,15 +90,60 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
           </form>
         </div>
       ) : (
-        <div>
-          <Link href="/sign-in">Sign in</Link>
-          <Link href="/sign-up">Sign up</Link>
-          <button
-            onClick={handleGuestLogin}
-            className="mt-2 bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          {/* Overlay */}
+
+          {/* Modal panel */}
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="auth-modal-title"
+            className="relative z-10 w-full max-w-md rounded-2xl bg-white shadow-2xl ring-1 ring-black/5"
           >
-            Continue as Guest
-          </button>
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4 border-b px-6 py-4">
+              <h3 id="auth-modal-title" className="text-lg font-semibold">
+                Add a review
+              </h3>
+              <button
+                onClick={onClose}
+                aria-label="Close"
+                className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="px-6 py-5">
+              <p className="mb-4 text-sm text-gray-600">
+                Choose how you’d like to continue:
+              </p>
+
+              <div className="grid gap-3">
+                <Link
+                  href="/sign-in"
+                  className="inline-flex items-center justify-center rounded-lg bg-[#4574ab] px-4 py-2.5 text-white shadow hover:bg-[#365e8c] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                >
+                  Sign in
+                </Link>
+
+                <Link
+                  href="/sign-up"
+                  className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2.5 text-gray-800 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                >
+                  Sign up
+                </Link>
+
+                <button
+                  onClick={handleGuestLogin}
+                  className="inline-flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2.5 text-gray-800 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 cursor-pointer"
+                >
+                  Continue as Guest
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

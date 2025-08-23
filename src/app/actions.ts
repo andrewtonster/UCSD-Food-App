@@ -53,10 +53,8 @@ export async function submitReview(prevState: any, formData: FormData) {
   console.log(`/restaurant/${restaurantId}`);
   revalidatePath(`/restaurant/${restaurantId}`);
 
-  revalidatePath(`/`);
-  // revalidatePath(`/restaurant/[id]`, "page");
-
   // redirect(`/restaurant/${restaurantId}`);
+
   return { message: "Review submitted!", ok: true };
 }
 
@@ -124,12 +122,17 @@ const settingsSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
 });
 
+// WHEN THE USER UPDATES THEIR PROFILE
+
 export async function changeSettings(prevState: any, formData: FormData) {
+  console.log("IN THE CHANGING SETTINGS");
   const form = {
     name: formData.get("name"),
     profileImg: formData.get("profileImg"),
     userId: formData.get("userId"),
   };
+  console.log("in change settings");
+  console.log(form.profileImg, "this is the profile image in the server");
 
   const parsed = settingsSchema.safeParse(form);
 
