@@ -41,7 +41,7 @@ export async function submitReview(prevState: any, formData: FormData) {
     return { message: "user does not exist" };
   }
 
-  await prisma.review.create({
+  const review = await prisma.review.create({
     data: {
       comment,
       rating,

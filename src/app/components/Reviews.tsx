@@ -32,6 +32,8 @@ const Reviews = ({
     (prev, next: Review) => [...prev, next]
   );
 
+  console.log("THIS IS THE OPTIMISTIC REVIEWS", optimisticReviews);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -45,12 +47,16 @@ const Reviews = ({
           {" "}
           Add a review
         </button>
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          addOptimisticReview={addOptimisticReview}
+        >
           <h2 className="text-xl font-semibold mb-2">
             Hello Please Write your Review
           </h2>
         </Modal>
-        {reviews.map((review, idx) => (
+        {optimisticReviews.map((review, idx) => (
           <div
             key={idx}
             className="flex items-start bg-white rounded-xl shadow-md p-4 w-full max-w-2xl mx-auto transition-all"

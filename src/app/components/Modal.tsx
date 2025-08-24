@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import React, { useActionState, useEffect } from "react";
+import React, { startTransition, useActionState, useEffect } from "react";
 import { submitReview } from "../actions";
 import useAuth from "@/app/context/AuthContext";
 import Link from "next/link";
@@ -9,13 +9,33 @@ import { signInAnonymously } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { createAnonymousUser } from "../actions";
 
+interface User {
+  id: string;
+  email?: string | null;
+  name?: string | null;
+}
+
+interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
+  user: User;
+}
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  addOptimisticReview: (input: Review) => void;
 }
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({
+  isOpen,
+  onClose,
+  addOptimisticReview,
+  children,
+}: ModalProps) {
   const router = useRouter();
   const { user, loading } = useAuth();
   console.log("this is my user", user);
@@ -35,6 +55,35 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    // e.preventDefault();
+    console.log("IN HANDLE SUBMIT");
+    const fd = new FormData(e.currentTarget);
+    const comment = String(fd.get("comment") ?? "").trim();
+    const rating = Number(fd.get("rating") ?? 5);
+
+    const temp: Review = {
+      id: `temp-${crypto.randomUUID()}`,
+      rating,
+      comment,
+      createdAt: new Date(),
+      user: user
+        ? {
+            id: user.uid,
+            name: user.displayName ?? "You",
+            email: user.email ?? null,
+          }
+        : { id: "anon", name: "Anonymous", email: null },
+    };
+
+    if (addOptimisticReview) {
+      console.log("in optimistic update");
+      startTransition(() => {
+        addOptimisticReview(temp);
+      });
+    }
+  };
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm mb-0">
@@ -50,7 +99,11 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 
           {children}
 
-          <form action={formAction} className="flex flex-col gap-4 mt-8">
+          <form
+            onSubmit={handleSubmit}
+            action={formAction}
+            className="flex flex-col gap-4 mt-8"
+          >
             <input type="hidden" name="restaurantId" value={id} />
             <input type="hidden" name="userId" value={user?.uid || "guest"} />
 
@@ -91,9 +144,6 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
         </div>
       ) : (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-          {/* Overlay */}
-
-          {/* Modal panel */}
           <div
             role="dialog"
             aria-modal="true"
