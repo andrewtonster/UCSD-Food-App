@@ -8,46 +8,53 @@ import { useRouter } from "next/navigation";
 import { signInAnonymously } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { createAnonymousUser } from "../actions";
-
-interface User {
-  id: string;
-  email?: string | null;
-  name?: string | null;
-}
-
-interface Review {
-  id: string;
-  rating: number;
-  comment: string;
-  createdAt: Date;
-  user: User;
-}
+import { ReviewDTO } from "@/lib/types";
+import { ReviewActionState } from "@/lib/types";
+import { nerkoOne } from "../font";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  addOptimisticReview: (input: Review) => void;
+  setReviews: React.Dispatch<React.SetStateAction<ReviewDTO[]>>;
 }
 
 export default function Modal({
   isOpen,
   onClose,
-  addOptimisticReview,
+  setReviews,
   children,
 }: ModalProps) {
   const router = useRouter();
   const { user, loading } = useAuth();
   console.log("this is my user", user);
   const { id } = useParams<{ id: string }>();
-  const [state, formAction, isPending] = useActionState(submitReview, {
-    message: "review",
-    ok: false,
-  });
+  const initial: ReviewActionState = { ok: false, message: "", review: null };
+  const [state, formAction, isPending] = useActionState<
+    ReviewActionState,
+    FormData
+  >(submitReview, initial);
+
+  const establishSession = async () => {
+    const user = auth.currentUser;
+    if (!user) throw new Error("No guest user after signup");
+    const idToken = await user.getIdToken();
+    const res = await fetch("/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ idToken }),
+    });
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({ error: "Auth error" }));
+      throw new Error(error || "Failed to create session");
+    }
+  };
 
   const handleGuestLogin = async () => {
     try {
       const result = await signInAnonymously(auth);
+      await establishSession();
       const id = result.user.uid;
       createAnonymousUser(id);
     } catch (err) {
@@ -55,34 +62,16 @@ export default function Modal({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // e.preventDefault();
-    console.log("IN HANDLE SUBMIT");
-    const fd = new FormData(e.currentTarget);
-    const comment = String(fd.get("comment") ?? "").trim();
-    const rating = Number(fd.get("rating") ?? 5);
-
-    const temp: Review = {
-      id: `temp-${crypto.randomUUID()}`,
-      rating,
-      comment,
-      createdAt: new Date(),
-      user: user
-        ? {
-            id: user.uid,
-            name: user.displayName ?? "You",
-            email: user.email ?? null,
-          }
-        : { id: "anon", name: "Anonymous", email: null },
-    };
-
-    if (addOptimisticReview) {
-      console.log("in optimistic update");
-      startTransition(() => {
-        addOptimisticReview(temp);
+  useEffect(() => {
+    if (!isPending && state.ok && state.review) {
+      setReviews((prev) => {
+        if (prev.some((r) => r.id === state.review!.id)) return prev;
+        return [...prev, state.review!];
       });
+
+      onClose();
     }
-  };
+  }, [isPending, state.ok, state.review, setReviews, onClose]);
 
   if (!isOpen) return null;
   return (
@@ -99,11 +88,7 @@ export default function Modal({
 
           {children}
 
-          <form
-            onSubmit={handleSubmit}
-            action={formAction}
-            className="flex flex-col gap-4 mt-8"
-          >
+          <form action={formAction} className="flex flex-col gap-4 mt-8">
             <input type="hidden" name="restaurantId" value={id} />
             <input type="hidden" name="userId" value={user?.uid || "guest"} />
 
@@ -152,9 +137,12 @@ export default function Modal({
           >
             {/* Header */}
             <div className="flex items-start justify-between gap-4 border-b px-6 py-4">
-              <h3 id="auth-modal-title" className="text-lg font-semibold">
+              <h1
+                id="auth-modal-title"
+                className={`${nerkoOne.className} text-2xl font-semibold`}
+              >
                 Add a review
-              </h3>
+              </h1>
               <button
                 onClick={onClose}
                 aria-label="Close"

@@ -1,11 +1,9 @@
 "use server";
+
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
-import { writeFile } from "fs/promises";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
+import { ReviewDTO, ReviewActionState, FieldErrors } from "@/lib/types";
 
 const ReviewSchema = z.object({
   comment: z.string().min(1, "Comment is required"),
@@ -14,7 +12,32 @@ const ReviewSchema = z.object({
   userId: z.string().min(1),
 });
 
-export async function submitReview(prevState: any, formData: FormData) {
+function toReviewDTO(saved: {
+  id: string;
+  comment: string;
+  rating: number;
+  restaurantId: string;
+  userId: string;
+  createdAt: Date;
+  user: { id: string; name: string | null; email: string | null } | null;
+}): ReviewDTO {
+  return {
+    id: saved.id,
+    comment: saved.comment,
+    rating: saved.rating,
+    restaurantId: saved.restaurantId,
+    userId: saved.userId,
+    createdAt: saved.createdAt.toISOString(),
+    user: saved.user
+      ? { id: saved.user.id, name: saved.user.name, email: saved.user.email }
+      : null,
+  };
+}
+
+export async function submitReview(
+  prev: ReviewActionState,
+  formData: FormData
+): Promise<ReviewActionState> {
   const form = {
     comment: formData.get("comment"),
     rating: formData.get("rating"),
@@ -23,39 +46,44 @@ export async function submitReview(prevState: any, formData: FormData) {
   };
 
   const parsed = ReviewSchema.safeParse(form);
-
   if (!parsed.success) {
-    return {
-      message: "Validation failed",
-      errors: parsed.error.flatten().fieldErrors,
-    };
+    const errors: FieldErrors = parsed.error.flatten().fieldErrors;
+    return { ok: false, message: "Validation failed", review: null, errors };
   }
 
   const { comment, rating, restaurantId, userId } = parsed.data;
 
-  const existingUser = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-
+  const existingUser = await prisma.user.findUnique({ where: { id: userId } });
   if (!existingUser) {
-    return { message: "user does not exist" };
+    return {
+      ok: false,
+      message: "User does not exist",
+      review: null,
+    };
   }
 
-  const review = await prisma.review.create({
-    data: {
-      comment,
-      rating,
-      restaurantId,
-      userId,
-    },
-  });
+  try {
+    const saved = await prisma.review.create({
+      data: { comment, rating, restaurantId, userId },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+      },
+    });
 
-  console.log(`/restaurant/${restaurantId}`);
-  revalidatePath(`/restaurant/${restaurantId}`);
+    revalidatePath(`/restaurant/${restaurantId}`);
 
-  // redirect(`/restaurant/${restaurantId}`);
-
-  return { message: "Review submitted!", ok: true };
+    return {
+      ok: true,
+      message: "Review submitted!",
+      review: toReviewDTO(saved),
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      message: "Could not save your review. Please try again.",
+      review: null,
+    };
+  }
 }
 
 function generateShortName(userId: string) {

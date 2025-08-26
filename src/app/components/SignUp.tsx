@@ -78,7 +78,7 @@ export default function SignupForm() {
       <button
         type="submit"
         disabled={loading}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full cursor-pointer"
       >
         {loading ? "Signing up..." : "Sign Up"}
       </button>
@@ -96,7 +96,7 @@ export default function SignupForm() {
         type="button"
         onClick={handleGoogleSignup}
         disabled={loading}
-        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full"
+        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full cursor-pointer"
       >
         {loading ? "Redirecting..." : "Sign up with Google"}
       </button>

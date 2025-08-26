@@ -1,40 +1,25 @@
 "use client";
-import { useState, useOptimistic } from "react";
+import { useState, useOptimistic, useCallback } from "react";
 import { submitReview } from "../actions";
 import Image from "next/image";
 import Modal from "./Modal";
 import { ShipWheel } from "lucide-react";
-interface User {
-  id: string;
-  email?: string | null;
-  name?: string | null;
-}
 
-interface Review {
-  id: string;
-  rating: number;
-  comment: string;
-  createdAt: Date;
-  user: User;
-}
+import { ReviewDTO } from "@/lib/types";
+import { Star } from "lucide-react";
 const Reviews = ({
   initialReviews,
   restaurantId,
 }: {
-  initialReviews: Review[];
+  initialReviews: ReviewDTO[];
   restaurantId: string;
 }) => {
-  const [reviews, setReviews] = useState<Review[]>(initialReviews ?? []);
+  const [reviews, setReviews] = useState<ReviewDTO[]>(initialReviews ?? []);
   const count = reviews.length;
 
-  const [optimisticReviews, addOptimisticReview] = useOptimistic(
-    reviews,
-    (prev, next: Review) => [...prev, next]
-  );
-
-  console.log("THIS IS THE OPTIMISTIC REVIEWS", optimisticReviews);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const onClose = useCallback(() => setIsModalOpen(false), []);
 
   return (
     <div className=" relative bg-white px-5 py-5 rounded-lg">
@@ -47,16 +32,12 @@ const Reviews = ({
           {" "}
           Add a review
         </button>
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          addOptimisticReview={addOptimisticReview}
-        >
+        <Modal isOpen={isModalOpen} onClose={onClose} setReviews={setReviews}>
           <h2 className="text-xl font-semibold mb-2">
             Hello Please Write your Review
           </h2>
         </Modal>
-        {optimisticReviews.map((review, idx) => (
+        {reviews.map((review, idx) => (
           <div
             key={idx}
             className="flex items-start bg-white rounded-xl shadow-md p-4 w-full max-w-2xl mx-auto transition-all"
@@ -65,7 +46,7 @@ const Reviews = ({
             <div className="relative w-16 h-16 mr-4 rounded-full overflow-hidden shrink-0 border-2 border-[#8cc2e1]">
               <Image
                 src="/ramen.webp"
-                alt={`Avatar of ${review.user.name ?? "Anonymous"}`}
+                alt={`Avatar of ${review?.user?.name ?? "Anonymous"}`}
                 fill
                 className="object-cover"
                 sizes="(max-width: 268px) 100vw"
@@ -76,9 +57,18 @@ const Reviews = ({
             {/* Content */}
             <div className="flex flex-col">
               <h3 className="font-semibold text-[#4574ab] text-lg">
-                {review.user.name ?? "Anonymous"}
+                {review?.user?.name ?? "Anonymous"}
               </h3>
               <p className="text-[#2b263b] text-sm mt-1">{review.comment}</p>
+            </div>
+
+            {/* Rating */}
+
+            <div className="ml-auto my-auto text-gray-700 flex items-center">
+              <span className="flex items-center gap-1">
+                {review?.rating}
+                <Star fill="#ffad72" className="w-4 h-4" />
+              </span>
             </div>
           </div>
         ))}

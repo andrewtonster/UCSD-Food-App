@@ -4,7 +4,6 @@ import Image from "next/image";
 import { Pencil } from "lucide-react";
 
 type SettingsGearProps = {
-  /** EXPECTS a leading slash ("/fish.jpg"). Fallback handled here. */
   profileImg: string | null;
   onEdit: () => void;
   pending?: boolean;
@@ -15,14 +14,14 @@ export default function SettingsGear({
   onEdit,
   pending = false,
 }: SettingsGearProps) {
-  const src = profileImg ?? "/ramen.webp"; // DO NOT prepend another '/'
+  const src = profileImg || "/ramen.webp";
 
   console.log("this is my profile img", profileImg);
 
   return (
     <button
       type="button"
-      className="relative size-[200px] rounded-full overflow-hidden ring-4 ring-white group inline-block"
+      className="relative size-[200px] rounded-full overflow-hidden ring-4 ring-white group inline-block cursor-pointer"
       onClick={onEdit}
       aria-label="Edit profile image"
       disabled={pending}
@@ -30,7 +29,7 @@ export default function SettingsGear({
       <Image
         key={src}
         src={src}
-        alt="Profile"
+        alt={"/ramen.webp"}
         fill
         sizes="200px"
         className="object-cover transition duration-300 group-hover:brightness-75"

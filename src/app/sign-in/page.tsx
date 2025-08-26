@@ -19,7 +19,7 @@ export default function LoginForm() {
 
   const finishLogin = async () => {
     const user = auth.currentUser;
-    if (!user) return;
+    if (!user) throw new Error("No user after Login");
 
     const idToken = await user.getIdToken(true);
 
@@ -37,6 +37,7 @@ export default function LoginForm() {
 
     router.push("/");
   };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);

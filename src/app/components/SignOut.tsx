@@ -42,7 +42,7 @@ export default function SignOutButton() {
         onClick={handleSignOut}
         className="bg-[#9e9ca5] text-white px-4 py-2 rounded-2xl hover:bg-[#d3d4db] cursor-pointer"
       >
-        Sign Out
+        {user.isAnonymous ? "Sign out as guest" : "Sign Out"}
       </button>
     </div>
   );

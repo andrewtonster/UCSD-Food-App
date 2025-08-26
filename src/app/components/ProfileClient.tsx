@@ -70,7 +70,8 @@ export default function ProfileClient({
           reviews.map((r) => (
             <div key={r.id} className="border p-4 rounded-lg shadow bg-white">
               <h3 className="font-semibold text-lg">
-                {r.restaurant.name} — ★ {r.rating}
+                {r.restaurant.name} — <span className="text-[#f79f79]">★</span>{" "}
+                {r.rating}
               </h3>
               <p className="text-gray-600 mt-1">{r.comment}</p>
             </div>
