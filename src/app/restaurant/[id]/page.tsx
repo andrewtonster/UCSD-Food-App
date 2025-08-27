@@ -8,7 +8,7 @@ import Link from "next/link";
 import LoginForm from "@/app/components/Login";
 import SignOutButton from "@/app/components/SignOut";
 import Image from "next/image";
-import ImageCarousel from "@/app/components/ImageCarousel";
+
 import {
   Star,
   MapPin,
@@ -60,8 +60,6 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   const cords = restaurant?.coordinates.split(",");
 
-  const images = ["/ramen.webp", "/ramen.webp", "/ramen.webp"];
-
   return (
     <div className="min-h-screen text-[#2b263b] relative">
       <main className="max-w-6xl mx-auto px-6 sm:px-10 py-12 space-y-16">
@@ -94,10 +92,23 @@ const page = async ({ params }: { params: { id: string } }) => {
         </section>
 
         {/* Image Carousel */}
-        <section className="border border-[#8cc2e1] rounded-xl p-2 bg-[#ffffff] shadow-md">
-          <ImageCarousel images={images} />
+        <section className="rounded-xl bg-white shadow-md border border-[#8cc2e1] p-2">
+          <div
+            className="
+      relative w-full overflow-hidden rounded-lg
+      aspect-[5/4] sm:aspect-[4/3] lg:aspect-[16/10]
+    "
+          >
+            <Image
+              src={`/${restaurant.imageUrl}.webp`}
+              alt={`Image of ${restaurant.name}`}
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px"
+              priority
+            />
+          </div>
         </section>
-
         {/* About + Map */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* About */}

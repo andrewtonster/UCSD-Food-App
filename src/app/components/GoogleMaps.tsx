@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
@@ -18,6 +18,7 @@ const GoogleMaps = ({ lat, lng }: { lat: string; lng: string }) => {
     lng: Number(lng),
   };
 
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
   const [map, setMap] = React.useState(null);
 
   const onLoad = React.useCallback(function callback(map) {
@@ -33,16 +34,27 @@ const GoogleMaps = ({ lat, lng }: { lat: string; lng: string }) => {
   }, []);
 
   return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={10}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-    >
-      {/* Child components, such as markers, info windows, etc. */}
-      <></>
-    </GoogleMap>
+    <div className="relative w-full h-full">
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+      >
+        {/* Child components, such as markers, info windows, etc. */}
+        <MarkerF position={center} />
+      </GoogleMap>
+
+      <a
+        href={directionsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="absolute bottom-4 left-4 bg-[#d7e9f5] shadow px-3 py-2 rounded-lg font-medium hover:bg-[#b4d4ec]"
+      >
+        Get Directions
+      </a>
+    </div>
   ) : (
     <></>
   );

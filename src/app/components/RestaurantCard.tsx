@@ -39,7 +39,7 @@ const RestaurantCard = ({
           >
             <figure className="relative w-full h-[10rem] sm:h-[12rem] md:h-[14rem] lg:h-[16rem] xl:h-[18rem]">
               <Image
-                src="/ramen.webp"
+                src={`/${restaurant.imageUrl}.webp`}
                 alt={`Image of ${restaurant.name}`}
                 fill
                 className="object-cover"
@@ -67,7 +67,7 @@ const RestaurantCard = ({
           >
             <figure className="relative w-full h-[8rem] sm:h-[10rem] md:h-[12rem] lg:h-[14rem] xl:h-[16rem]">
               <Image
-                src="/ramen.webp"
+                src={`/${restaurant.imageUrl}.webp`}
                 alt={`Image of ${restaurant.name}`}
                 fill
                 className="object-cover"
