@@ -55,11 +55,21 @@ const RestaurantList = ({
       ) : (
         <div className="w-full max-w-7xl mx-auto px-4 space-y-8">
           {[
-            "East Side",
-            "West Side",
-            "Downtown",
-            "North Campus",
-            "South Campus",
+            "Sixth College",
+            "Muir College",
+            "Price Center West",
+            "Price Center East",
+            "Price Center",
+            "Eleanor Roosevelt College",
+            "Revelle College",
+            "Marshall College",
+            "Canyon Vista Marketplace",
+            "Mandeville",
+            "Seventh College",
+            "Franklin Antonio Hall",
+            "Geisel Library",
+            "School of Medicine",
+            "North Torrey Pines",
           ].map((section, group) => {
             if (!grouped[section]?.length) return null;
 
@@ -76,7 +86,9 @@ const RestaurantList = ({
                       key={idx}
                       indexKey={idx}
                       restaurant={restaurant}
-                      large={group == 2}
+                      large={
+                        group == 2 || group == 4 || group == 6 || group == 8
+                      }
                     />
                   ))}
                 </div>

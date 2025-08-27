@@ -18,13 +18,14 @@ datasource db {
 model Restaurant {
   id            String   @id @default(cuid())
   name          String
-  ratingScore   Float
+  ratingScore   Float    @default(0)
   numRatings    Int      @default(0)
   coordinates   String
   campusSection String
   imageUrl      String?
   reviews       Review[]
   open          String
+  description   String   @default("Restaurant Description")
 }
 
 model Review {
