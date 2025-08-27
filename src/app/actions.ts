@@ -70,6 +70,24 @@ export async function submitReview(
       },
     });
 
+    const stats = await prisma.review.aggregate({
+      where: { restaurantId: restaurantId },
+      _avg: { rating: true },
+      _count: { rating: true },
+    });
+
+    const averageRating = parseFloat(stats._avg.rating?.toFixed(1) || "0"); // e.g. 4.2
+    const numRatings = stats._count.rating;
+
+    await prisma.restaurant.update({
+      where: { id: restaurantId },
+      data: {
+        ratingScore: averageRating,
+        numRatings: numRatings,
+      },
+    });
+
+    revalidatePath("/");
     revalidatePath(`/restaurant/${restaurantId}`);
 
     return {

@@ -41,14 +41,16 @@ const page = async ({ params }: { params: { id: string } }) => {
     },
   });
 
-  const stats = await prisma.review.aggregate({
-    where: { restaurantId: id },
-    _avg: { rating: true },
-    _count: { rating: true },
+  await prisma.restaurant.findFirst({
+    where: { id: id },
+    select: {
+      ratingScore: true,
+      numRatings: true,
+    },
   });
 
-  const averageRating = stats._avg.rating?.toFixed(1) ?? 0; // e.g. 4.2
-  const numRatings = stats._count.rating;
+  const averageRating = restaurant?.ratingScore; // e.g. 4.2
+  const numRatings = restaurant?.numRatings;
 
   console.log(restaurant);
 
