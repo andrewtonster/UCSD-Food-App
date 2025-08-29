@@ -19,11 +19,7 @@ interface RestaurantCardProps {
   large: boolean;
 }
 
-const RestaurantCard = ({
-  restaurant,
-  indexKey,
-  large,
-}: RestaurantCardProps) => {
+const RestaurantCard = ({ restaurant, large }: RestaurantCardProps) => {
   // true if text in searchbar false otherwise
 
   return (

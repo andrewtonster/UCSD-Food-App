@@ -2,10 +2,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import GoogleMaps from "@/app/components/GoogleMaps";
-import ReviewsForm from "@/app/components/ReviewsForm";
 import Reviews from "@/app/components/Reviews";
-import Link from "next/link";
-import LoginForm from "@/app/components/Login";
 import SignOutButton from "@/app/components/SignOut";
 import Image from "next/image";
 
@@ -23,7 +20,7 @@ import { nerkoOne } from "@/app/font";
 
 const bevan = Bevan({
   subsets: ["latin"],
-  weight: "400", // Bevan only has 400
+  weight: "400",
   variable: "--font-bevan",
 });
 
@@ -91,7 +88,6 @@ const page = async ({ params }: { params: { id: string } }) => {
           </div>
         </section>
 
-        {/* Image Carousel */}
         <section className="rounded-xl bg-white shadow-md border border-[#8cc2e1] p-2">
           <div
             className="
@@ -104,8 +100,11 @@ const page = async ({ params }: { params: { id: string } }) => {
               alt={`Image of ${restaurant.name}`}
               fill
               className="object-cover object-center"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1100px"
+              sizes="(max-width: 640px) 100vw,
+         (max-width: 1024px) 90vw,
+         2000px"
               priority
+              quality={90}
             />
           </div>
         </section>

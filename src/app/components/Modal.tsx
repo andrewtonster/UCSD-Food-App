@@ -1,10 +1,9 @@
 "use client";
 import { useParams } from "next/navigation";
-import React, { startTransition, useActionState, useEffect } from "react";
+import React, { useActionState, useEffect } from "react";
 import { submitReview } from "../actions";
 import useAuth from "@/app/context/AuthContext";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { signInAnonymously } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { createAnonymousUser } from "../actions";
@@ -25,8 +24,7 @@ export default function Modal({
   setReviews,
   children,
 }: ModalProps) {
-  const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   console.log("this is my user", user);
   const { id } = useParams<{ id: string }>();
   const initial: ReviewActionState = { ok: false, message: "", review: null };

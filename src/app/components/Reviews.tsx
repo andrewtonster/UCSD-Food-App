@@ -1,6 +1,5 @@
 "use client";
-import { useState, useOptimistic, useCallback } from "react";
-import { submitReview } from "../actions";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import Modal from "./Modal";
 import { ShipWheel } from "lucide-react";
@@ -9,13 +8,11 @@ import { ReviewDTO } from "@/lib/types";
 import { Star } from "lucide-react";
 const Reviews = ({
   initialReviews,
-  restaurantId,
 }: {
   initialReviews: ReviewDTO[];
   restaurantId: string;
 }) => {
   const [reviews, setReviews] = useState<ReviewDTO[]>(initialReviews ?? []);
-  const count = reviews.length;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

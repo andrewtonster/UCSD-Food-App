@@ -11,7 +11,7 @@ export type ReviewDTO = {
   rating: number;
   restaurantId: string; // must always be present
   userId: string;
-  createdAt: string; // ISO string
+  createdAt: Date; // ISO string
   user: UserDTO | null;
 };
 export type FieldErrors = {

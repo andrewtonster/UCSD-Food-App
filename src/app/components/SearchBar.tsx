@@ -9,7 +9,7 @@ const SearchBar = ({
   setSearch: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [query, setQuery] = useState("");
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
   console.log(user);
   return (

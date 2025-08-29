@@ -16,7 +16,7 @@ type Review = {
 export default function ProfileClient({
   userId,
   initialName,
-  initialProfileImg, // MUST include leading "/"
+  initialProfileImg,
   reviews,
 }: {
   userId: string;
@@ -87,7 +87,7 @@ export default function ProfileClient({
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         initialName={optimisticUser.name}
-        initialProfileImg={optimisticUser.profileImg} // leading "/"
+        initialProfileImg={optimisticUser.profileImg}
         onSave={handleSave}
       />
     </div>

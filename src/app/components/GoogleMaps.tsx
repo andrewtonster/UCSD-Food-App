@@ -21,7 +21,7 @@ const GoogleMaps = ({ lat, lng }: { lat: string; lng: string }) => {
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
   const [map, setMap] = React.useState(null);
 
-  const onLoad = React.useCallback(function callback(map) {
+  const onLoad = React.useCallback(function callback(map: any) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
@@ -29,7 +29,7 @@ const GoogleMaps = ({ lat, lng }: { lat: string; lng: string }) => {
     setMap(map);
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = React.useCallback(function callback(map: any) {
     setMap(null);
   }, []);
 
