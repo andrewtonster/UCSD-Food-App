@@ -27,7 +27,7 @@ export default function SignOutButton() {
     }
   };
 
-  if (!ready || !user) return null; // avoid flicker / hydration mismatch
+  if (!ready || !user) return null;
 
   return (
     <div

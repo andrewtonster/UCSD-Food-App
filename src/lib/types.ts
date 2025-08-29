@@ -3,6 +3,7 @@ export type UserDTO = {
   id: string;
   name: string | null;
   email: string | null;
+  profileImg: string;
 };
 
 export type ReviewDTO = {

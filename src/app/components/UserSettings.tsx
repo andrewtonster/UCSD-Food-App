@@ -22,7 +22,12 @@ export default function UserSettings({
 
   if (!isOpen) return null;
 
-  const options = ["/whale.jpeg", "/fish.jpg", "/ramen.webp", "/crab.webp"]; // all with leading "/"
+  const options = [
+    "/icons/crab.webp",
+    "/icons/fish.webp",
+    "/icons/octopus.webp",
+    "/icons/stingray.webp",
+  ]; // all with leading "/"
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,7 +45,7 @@ export default function UserSettings({
       <div className="bg-white p-6 rounded-lg max-w-md w-full shadow-lg relative">
         <button
           onClick={onClose}
-          className="absolute top-2 left-2 text-gray-500 hover:text-gray-700 text-2xl"
+          className="absolute top-2 left-2 text-gray-500 hover:text-gray-700 text-2xl cursor-pointer"
           aria-label="Close modal"
         >
           &times;
@@ -68,7 +73,7 @@ export default function UserSettings({
                     type="button"
                     key={src}
                     onClick={() => setChosenImage(src)}
-                    className={`rounded-full aspect-square relative overflow-hidden border transition ${
+                    className={` cursor-pointer rounded-full aspect-square relative overflow-hidden border transition ${
                       selected ? "brightness-50" : "hover:brightness-50"
                     }`}
                   >
@@ -82,7 +87,7 @@ export default function UserSettings({
           <button
             disabled={isSubmitting}
             type="submit"
-            className="bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+            className="cursor-pointer bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
           >
             {isSubmitting ? "Saving..." : "Save Settings"}
           </button>

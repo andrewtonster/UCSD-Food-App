@@ -32,8 +32,7 @@ export default async function ProfilePage({ params }: PageProps) {
 
   if (!user) return <div>User not found</div>;
 
-  // Client always gets a leading slash; DB stores without slash.
-  const img = user.profileImg ? `${user.profileImg}` : "ramen.webp";
+  const img = user.profileImg ? `${user.profileImg}` : "fish.jpg";
   console.log("this is the img", img);
 
   return (

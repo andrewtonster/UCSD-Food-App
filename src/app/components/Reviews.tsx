@@ -42,7 +42,7 @@ const Reviews = ({
             {/* Avatar */}
             <div className="relative w-16 h-16 mr-4 rounded-full overflow-hidden shrink-0 border-2 border-[#8cc2e1]">
               <Image
-                src="/ramen.webp"
+                src={`${review?.user?.profileImg}`}
                 alt={`Avatar of ${review?.user?.name ?? "Anonymous"}`}
                 fill
                 className="object-cover"

@@ -14,7 +14,8 @@ export default function SettingsGear({
   onEdit,
   pending = false,
 }: SettingsGearProps) {
-  const src = profileImg || "/ramen.webp";
+  const src = profileImg || "/icons/anonymous.webp";
+  console.log("this is my pfp", src);
 
   console.log("this is my profile img", profileImg);
 
@@ -29,7 +30,7 @@ export default function SettingsGear({
       <Image
         key={src}
         src={src}
-        alt={"/ramen.webp"}
+        alt={"/fish.jpg"}
         fill
         sizes="200px"
         className="object-cover transition duration-300 group-hover:brightness-75"
