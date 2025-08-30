@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -17,8 +18,22 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // already logged in → kick to home
+        router.replace("/");
+      } else {
+        // not logged in → allow rendering
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
+
   const finishLogin = async () => {
     const user = auth.currentUser;
+
     if (!user) throw new Error("No user after Login");
 
     const idToken = await user.getIdToken(true);

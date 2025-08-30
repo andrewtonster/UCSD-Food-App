@@ -16,7 +16,6 @@ export async function POST(req: Request) {
       expiresIn: expiresIn,
     });
 
-    console.log("passed session cookie");
     const res = NextResponse.json({ ok: true });
 
     const isProd = process.env.NODE_ENV === "production";

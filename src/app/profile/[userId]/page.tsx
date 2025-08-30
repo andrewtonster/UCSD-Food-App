@@ -9,7 +9,7 @@ interface PageProps {
 }
 
 export default async function ProfilePage({ params }: PageProps) {
-  const { userId } = params;
+  const { userId } = await params;
 
   const cookieStore = await cookies();
   const token = cookieStore.get("__session")?.value;
