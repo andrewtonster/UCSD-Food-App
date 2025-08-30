@@ -19,7 +19,12 @@ function toReviewDTO(saved: {
   restaurantId: string;
   userId: string;
   createdAt: Date;
-  user: { id: string; name: string | null; email: string | null } | null;
+  user: {
+    id: string;
+    name: string | null;
+    email: string | null;
+    profileImg: string;
+  } | null;
 }): ReviewDTO {
   return {
     id: saved.id,
@@ -29,7 +34,12 @@ function toReviewDTO(saved: {
     userId: saved.userId,
     createdAt: new Date(),
     user: saved.user
-      ? { id: saved.user.id, name: saved.user.name, email: saved.user.email }
+      ? {
+          id: saved.user.id,
+          name: saved.user.name,
+          email: saved.user.email,
+          profileImg: saved.user.profileImg,
+        }
       : null,
   };
 }
@@ -66,7 +76,9 @@ export async function submitReview(
     const saved = await prisma.review.create({
       data: { comment, rating, restaurantId, userId },
       include: {
-        user: { select: { id: true, name: true, email: true } },
+        user: {
+          select: { id: true, name: true, email: true, profileImg: true },
+        },
       },
     });
 

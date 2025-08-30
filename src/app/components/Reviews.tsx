@@ -34,41 +34,45 @@ const Reviews = ({
             Hello Please Write your Review
           </h2>
         </Modal>
-        {reviews.map((review, idx) => (
-          <div
-            key={idx}
-            className="flex items-start bg-white rounded-xl shadow-md p-4 w-full max-w-2xl mx-auto transition-all"
-          >
-            {/* Avatar */}
-            <div className="relative w-16 h-16 mr-4 rounded-full overflow-hidden shrink-0 border-2 border-[#8cc2e1]">
-              <Image
-                src={`${review?.user?.profileImg}`}
-                alt={`Avatar of ${review?.user?.name ?? "Anonymous"}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 268px) 100vw"
-                loading="lazy"
-              />
-            </div>
+        {reviews.map((review, idx) => {
+          console.log("THIS IS THE CURRENT USER", review?.user);
+          console.log("This is the current image", review?.user?.profileImg);
+          return (
+            <div
+              key={review.id}
+              className="flex items-start bg-white rounded-xl shadow-md p-4 w-full max-w-2xl mx-auto transition-all"
+            >
+              {/* Avatar */}
+              <div className="relative w-16 h-16 mr-4 rounded-full overflow-hidden shrink-0 border-2 border-[#8cc2e1]">
+                <Image
+                  src={`${review?.user?.profileImg || "/icons/anonymous.webp"}`}
+                  alt={`Avatar of ${review?.user?.name ?? "Anonymous"}`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 268px) 100vw"
+                  loading="lazy"
+                />
+              </div>
 
-            {/* Content */}
-            <div className="flex flex-col">
-              <h3 className="font-semibold text-[#4574ab] text-lg">
-                {review?.user?.name ?? "Anonymous"}
-              </h3>
-              <p className="text-[#2b263b] text-sm mt-1">{review.comment}</p>
-            </div>
+              {/* Content */}
+              <div className="flex flex-col">
+                <h3 className="font-semibold text-[#4574ab] text-lg">
+                  {review?.user?.name ?? "Anonymous"}
+                </h3>
+                <p className="text-[#2b263b] text-sm mt-1">{review.comment}</p>
+              </div>
 
-            {/* Rating */}
+              {/* Rating */}
 
-            <div className="ml-auto my-auto text-gray-700 flex items-center">
-              <span className="flex items-center gap-1">
-                {review?.rating}
-                <Star fill="#ffad72" className="w-4 h-4" />
-              </span>
+              <div className="ml-auto my-auto text-gray-700 flex items-center">
+                <span className="flex items-center gap-1">
+                  {review?.rating}
+                  <Star fill="#ffad72" className="w-4 h-4" />
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
