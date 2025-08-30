@@ -62,7 +62,7 @@ export default function LoginForm() {
       await signInWithEmailAndPassword(auth, email, password);
       await finishLogin();
     } catch (err: any) {
-      setError(err.message);
+      setError("Email or Password is incorrect, please try again");
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ export default function LoginForm() {
       await signInWithPopup(auth, provider);
       await finishLogin();
     } catch (err: any) {
-      setError(err.message);
+      setError("Google sign-in failed. Please try again.");
     } finally {
       setLoading(false);
     }

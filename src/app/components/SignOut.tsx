@@ -20,10 +20,25 @@ export default function SignOutButton() {
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth);
-      router.push("/");
+      await Promise.all([
+        signOut(auth),
+        fetch("/api/session", {
+          method: "DELETE",
+          credentials: "include",
+        }),
+      ]);
     } catch (e) {
-      console.error("Error signing out:", e);
+      console.error("Sign out error:", e);
+
+      try {
+        await fetch("/api/session", {
+          method: "DELETE",
+          credentials: "include",
+        });
+      } catch {}
+    } finally {
+      router.push("/");
+      router.refresh();
     }
   };
 

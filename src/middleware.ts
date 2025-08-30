@@ -6,9 +6,13 @@ export const config = {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const method = req.method;
   const cookie = req.cookies.get("__session")?.value;
 
   if (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up")) {
+    if (method !== "GET" && method !== "HEAD") {
+      return NextResponse.next();
+    }
     if (cookie) {
       return NextResponse.redirect(new URL("/", req.url));
     }

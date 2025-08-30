@@ -11,6 +11,28 @@ import { useRouter } from "next/navigation";
 import { createUser } from "../actions";
 import { nerkoOne } from "../font";
 
+function signupErrorMessage(err: unknown): string {
+  const code = (err as any)?.code || "";
+  switch (code) {
+    case "auth/email-already-in-use":
+      return "That email is already in use. Try signing in instead.";
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+    case "auth/weak-password":
+      return "Your password is too weak. Try at least 6–8 characters.";
+    case "auth/operation-not-allowed":
+      return "Email/password sign-up is disabled for this project.";
+    case "auth/network-request-failed":
+      return "Network error. Check your connection and try again.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please wait a moment and try again.";
+    case "auth/internal-error":
+      return "Unexpected server error. Please try again.";
+    default:
+      return (err as any)?.message || "Sign-up failed. Please try again.";
+  }
+}
+
 export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,12 +69,18 @@ export default function SignupForm() {
         password
       );
 
+      console.log(userCredential);
+
       await establishSession();
       const uid = userCredential.user.uid;
-      createUser(uid, email, name);
+      console.log("This is my uid");
+      await createUser(uid, email, name);
       router.push("/"); // or any protected route
     } catch (err: any) {
-      setError(err.message);
+      const msg = err?.code
+        ? signupErrorMessage(err)
+        : err?.message || "Sign-up failed.";
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -66,11 +94,13 @@ export default function SignupForm() {
       const result = await signInWithPopup(auth, provider);
       await establishSession();
 
-      createUser(
+      const res1 = await createUser(
         result.user.uid,
         result.user.email as string,
         result.user.displayName as string
       );
+
+      if (!res1?.ok) throw new Error(res1?.message ?? "createUser failed");
 
       router.push("/");
     } catch (err: any) {

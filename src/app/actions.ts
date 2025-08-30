@@ -163,7 +163,7 @@ export async function createUser(userId: string, email: string, name: string) {
   if (!userId) {
     return;
   }
-  await prisma.user.create({
+  const res = await prisma.user.create({
     data: {
       id: userId,
       email: email,
@@ -171,16 +171,18 @@ export async function createUser(userId: string, email: string, name: string) {
     },
   });
 
-  return { message: "user created!" };
+  if (!res) {
+    return { message: "user failed to create!", ok: false };
+  }
+
+  return { message: "user created!", ok: true };
 }
 
 const settingsSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  profileImg: z.string().optional(), // Firebase Storage URL
+  profileImg: z.string().optional(),
   userId: z.string().min(1, "User ID is required"),
 });
-
-// WHEN THE USER UPDATES THEIR PROFILE
 
 export async function changeSettings(prevState: any, formData: FormData) {
   console.log("IN THE CHANGING SETTINGS");
@@ -215,7 +217,7 @@ export async function changeSettings(prevState: any, formData: FormData) {
     where: { id: userId },
     data: {
       name,
-      profileImg, // just a string URL
+      profileImg,
     },
   });
 

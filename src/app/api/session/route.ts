@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { adminAuth } from "@/lib/firebaseAdmin";
+import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
   try {
@@ -8,8 +9,6 @@ export async function POST(req: Request) {
     if (!idToken || typeof idToken !== "string") {
       return NextResponse.json({ error: "Missing token" }, { status: 400 });
     }
-
-    console.log("passed sign in");
 
     const expiresIn = 5 * 24 * 60 * 60 * 1000; // 5 days
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
@@ -29,12 +28,36 @@ export async function POST(req: Request) {
     if (isProd) base.push("Secure");
 
     res.headers.set("Set-Cookie", base.join("; "));
-    return res; // <--- RETURN THIS
+    return res;
   } catch (e) {
-    console.log(e);
     return NextResponse.json(
       { error: "Failed to create session", e },
       { status: 401 }
     );
+  }
+}
+
+export async function DELETE() {
+  try {
+    const cookieStore = await cookies();
+    const session = cookieStore.get("__session")?.value;
+    if (session) {
+      try {
+        const decoded = await adminAuth.verifySessionCookie(session, true);
+        await adminAuth.revokeRefreshTokens(decoded.sub);
+      } catch {}
+    }
+  } finally {
+    const res = NextResponse.json({ ok: true });
+    res.headers.set(
+      "Set-Cookie",
+      [
+        "__session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0",
+        process.env.NODE_ENV === "production" ? "Secure" : "",
+      ]
+        .filter(Boolean)
+        .join("; ")
+    );
+    return res;
   }
 }
