@@ -27,7 +27,7 @@ function toReviewDTO(saved: {
     rating: saved.rating,
     restaurantId: saved.restaurantId,
     userId: saved.userId,
-    createdAt: saved.createdAt.toISOString(),
+    createdAt: new Date(),
     user: saved.user
       ? { id: saved.user.id, name: saved.user.name, email: saved.user.email }
       : null,
