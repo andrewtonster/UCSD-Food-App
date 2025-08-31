@@ -37,7 +37,7 @@ export const SearchClient = ({ allRestaurants }: RestaurantListProps) => {
       <h1
         className={`${knewave.className} text-center text-6xl pt-10 text-[#426da7]`}
       >
-        Wave Eating
+        UCSD Harbor
       </h1>
       <SearchBar setSearch={setSearch} />
       <RestaurantList

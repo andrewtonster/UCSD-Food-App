@@ -13,7 +13,7 @@ export default function NotFound() {
       <h1
         className={`${knewave.className} text-center text-6xl pt-10 text-[#426da7]`}
       >
-        Wave Eating
+        UCSD Harbor Eatery
       </h1>
 
       <div className="min-h-screen flex flex-col items-center justify-center text-center ">
