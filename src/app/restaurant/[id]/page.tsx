@@ -124,7 +124,7 @@ export default async function Page({
               >
                 About
               </h2>
-
+              {/* restaurant description */}
               <p>{restaurant.description}</p>
             </div>
           </div>
