@@ -24,7 +24,11 @@ const bevan = Bevan({
   variable: "--font-bevan",
 });
 
-const page = async ({ params }: { params: { id: string } }) => {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   const restaurant = await prisma.restaurant.findFirst({
@@ -48,8 +52,6 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   const averageRating = restaurant?.ratingScore; // e.g. 4.2
   const numRatings = restaurant?.numRatings;
-
-  console.log(restaurant);
 
   if (!restaurant) {
     return notFound();
@@ -160,9 +162,7 @@ const page = async ({ params }: { params: { id: string } }) => {
       </main>
     </div>
   );
-};
-
-export default page;
+}
 
 // use server action for comment, because of this we are going to be a client
 // once we get the data we use it optimsiitcally to update

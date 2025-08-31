@@ -35,8 +35,6 @@ const Reviews = ({
           </h2>
         </Modal>
         {reviews.map((review, idx) => {
-          console.log("THIS IS THE CURRENT USER", review?.user);
-          console.log("This is the current image", review?.user?.profileImg);
           return (
             <div
               key={review.id}

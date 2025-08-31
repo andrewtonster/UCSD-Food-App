@@ -11,7 +11,6 @@ const SearchBar = ({
   const [query, setQuery] = useState("");
   const { user } = useAuth();
 
-  console.log(user);
   return (
     <div className="w-full flex justify-center px-4 my-[3rem] h-20">
       <input

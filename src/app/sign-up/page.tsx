@@ -69,11 +69,9 @@ export default function SignupForm() {
         password
       );
 
-      console.log(userCredential);
-
       await establishSession();
       const uid = userCredential.user.uid;
-      console.log("This is my uid");
+
       await createUser(uid, email, name);
       router.push("/"); // or any protected route
     } catch (err: any) {

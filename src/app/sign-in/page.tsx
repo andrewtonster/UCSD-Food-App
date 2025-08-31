@@ -61,7 +61,7 @@ export default function LoginForm() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       await finishLogin();
-    } catch (err: any) {
+    } catch (err) {
       setError("Email or Password is incorrect, please try again");
     } finally {
       setLoading(false);

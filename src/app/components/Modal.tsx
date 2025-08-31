@@ -25,7 +25,7 @@ export default function Modal({
   children,
 }: ModalProps) {
   const { user } = useAuth();
-  console.log("this is my user", user);
+
   const { id } = useParams<{ id: string }>();
   const initial: ReviewActionState = { ok: false, message: "", review: null };
   const [state, formAction, isPending] = useActionState<

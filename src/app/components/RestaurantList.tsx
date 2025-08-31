@@ -37,6 +37,10 @@ const RestaurantList = ({
     return acc;
   }, {} as Record<string, Restaurant[]>);
 
+  Object.keys(grouped).forEach((section) => {
+    grouped[section].sort((a, b) => b.ratingScore - a.ratingScore);
+  });
+
   return (
     <>
       {isSearching ? (

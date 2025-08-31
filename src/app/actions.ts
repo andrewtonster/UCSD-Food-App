@@ -55,10 +55,9 @@ export async function submitReview(
     userId: formData.get("userId"),
   };
 
-  const parsed = ReviewSchema.safeParse(form);
+  const parsed = ReviewSchema.safeParse(form); // compare form to schema defined
   if (!parsed.success) {
-    const errors: FieldErrors = parsed.error.flatten().fieldErrors;
-    return { ok: false, message: "Validation failed", review: null, errors };
+    return { ok: false, message: "Please complete form field", review: null };
   }
 
   const { comment, rating, restaurantId, userId } = parsed.data;
@@ -185,14 +184,11 @@ const settingsSchema = z.object({
 });
 
 export async function changeSettings(prevState: any, formData: FormData) {
-  console.log("IN THE CHANGING SETTINGS");
   const form = {
     name: formData.get("name"),
     profileImg: formData.get("profileImg"),
     userId: formData.get("userId"),
   };
-  console.log("in change settings");
-  console.log(form.profileImg, "this is the profile image in the server");
 
   const parsed = settingsSchema.safeParse(form);
 

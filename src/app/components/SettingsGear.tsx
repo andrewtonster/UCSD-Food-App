@@ -15,9 +15,6 @@ export default function SettingsGear({
   pending = false,
 }: SettingsGearProps) {
   const src = profileImg || "/icons/anonymous.webp";
-  console.log("this is my pfp", src);
-
-  console.log("this is my profile img", profileImg);
 
   return (
     <button

@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma" // where the client code goes
 }
 
 datasource db {
@@ -31,9 +30,9 @@ model Restaurant {
 model Review {
   id           String     @id @default(cuid())
   rating       Int
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id]) // the actual restaurant object
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade) // the actual restaurant object
   restaurantId String // foreign key that is shared and connects the two
-  user         User       @relation(fields: [userId], references: [id])
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   comment      String
   createdAt    DateTime   @default(now())

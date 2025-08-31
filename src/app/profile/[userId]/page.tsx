@@ -4,11 +4,11 @@ import { cookies } from "next/headers";
 import { adminAuth } from "@/lib/firebaseAdmin";
 import ProfileClient from "@/app/components/ProfileClient";
 
-interface PageProps {
-  params: { userId: string };
-}
-
-export default async function ProfilePage({ params }: PageProps) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ userId: string }>;
+}) {
   const { userId } = await params;
 
   const cookieStore = await cookies();
@@ -33,7 +33,6 @@ export default async function ProfilePage({ params }: PageProps) {
   if (!user) return <div>User not found</div>;
 
   const img = user.profileImg ? `${user.profileImg}` : "fish.jpg";
-  console.log("this is the img", img);
 
   return (
     <ProfileClient
