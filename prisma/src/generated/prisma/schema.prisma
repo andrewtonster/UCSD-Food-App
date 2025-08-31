@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Restaurant {
+  id            String   @id @default(cuid())
+  name          String
+  ratingScore   Float    @default(0)
+  numRatings    Int      @default(0)
+  coordinates   String
+  campusSection String
+  imageUrl      String?
+  reviews       Review[]
+  open          String
+  description   String   @default("Restaurant Description")
+}
+
+model Review {
+  id           String     @id @default(cuid())
+  rating       Int
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade) // the actual restaurant object
+  restaurantId String // foreign key that is shared and connects the two
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  comment      String
+  createdAt    DateTime   @default(now())
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String?  @unique
+  name        String   @unique
+  isAnonymous Boolean  @default(false)
+  userReviews Review[]
+  profileImg  String   @default("/icons/anonymous.webp")
+}
