@@ -125,12 +125,7 @@ export default async function Page({
                 About
               </h2>
 
-              <p>
-                Welcome to {restaurant.name}, a favorite spot in the{" "}
-                {restaurant.campusSection} area of UCSD. Known for its authentic
-                flavors and cozy ambiance, we serve a variety of ramen dishes
-                and Japanese sides prepared fresh daily.
-              </p>
+              <p>{restaurant.description}</p>
             </div>
           </div>
 
